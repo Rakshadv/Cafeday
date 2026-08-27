@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Oak & Ember Café — Slow Mornings. Good Coffee.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black: #171512;
+      --deep-black: #0f0e0c;
+      --cream: #f4efe6;
+      --warm-white: #fbf8f2;
+      --brown: #6f4b35;
+      --light-brown: #a47b5d;
+      --line: rgba(23, 21, 18, 0.14);
+      --muted: #756d64;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      background: var(--warm-white);
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* NAVBAR */
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 22px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      transition: 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(23, 21, 18, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 15px 5%;
+    }
+
+    .logo {
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #c49a78;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 35px;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      position: relative;
+      transition: 0.3s;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -7px;
+      width: 0;
+      height: 1px;
+      background: white;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-button {
+      border: 1px solid rgba(255,255,255,0.7);
+      padding: 11px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      transition: 0.3s;
+    }
+
+    .nav-button:hover {
+      background: white;
+      color: var(--black);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 25px;
+    }
+
+    /* HERO */
+
+    .hero {
+      height: 100vh;
+      min-height: 650px;
+      position: relative;
+      background:
+        linear-gradient(rgba(12,10,8,0.48), rgba(12,10,8,0.72)),
+        url("https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=2000&q=90")
+        center/cover;
+      display: flex;
+      align-items: center;
+      padding: 0 7%;
+      color: white;
+    }
+
+    .hero-content {
+      max-width: 760px;
+      animation: heroIn 1.2s ease forwards;
+    }
+
+    @keyframes heroIn {
+      from {
+        opacity: 0;
+        transform: translateY(35px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      font-size: 11px;
+      margin-bottom: 22px;
+      color: #ded0c2;
+    }
+
+    .hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(58px, 8vw, 110px);
+      line-height: 0.94;
+      font-weight: 500;
+      max-width: 900px;
+    }
+
+    .hero h1 em {
+      color: #c7a384;
+      font-style: italic;
+    }
+
+    .hero p {
+      margin-top: 30px;
+      max-width: 520px;
+      line-height: 1.8;
+      color: #eee7df;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 35px;
+    }
+
+    .btn {
+      padding: 14px 25px;
+      border-radius: 30px;
+      border: 1px solid white;
+      transition: 0.3s;
+      font-size: 13px;
+      display: inline-block;
+    }
+
+    .btn.primary {
+      background: white;
+      color: var(--black);
+    }
+
+    .btn.primary:hover {
+      background: #c8a486;
+      border-color: #c8a486;
+    }
+
+    .btn.secondary:hover {
+      background: white;
+      color: var(--black);
+    }
+
+    .hero-note {
+      position: absolute;
+      bottom: 35px;
+      right: 7%;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #ddd3ca;
+    }
+
+    /* GENERAL */
+
+    section {
+      padding: 120px 7%;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--brown);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-family: "Playfair Display", serif;
+      font-weight: 500;
+      font-size: clamp(40px, 5vw, 65px);
+      line-height: 1.05;
+    }
+
+    /* INTRO */
+
+    .intro {
+      background: var(--cream);
+      text-align: center;
+    }
+
+    .intro-inner {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .intro p {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(25px, 3vw, 40px);
+      line-height: 1.35;
+      margin-top: 25px;
+      color: #332a24;
+    }
+
+    /* ABOUT */
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-image {
+      height: 620px;
+      overflow: hidden;
+    }
+
+    .about-image img {
+      height: 100%;
+      transition: transform 1s ease;
+    }
+
+    .about-image:hover img {
+      transform: scale(1.04);
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.9;
+      margin-top: 28px;
+      max-width: 530px;
+    }
+
+    .signature {
+      font-family: "Playfair Display", serif;
+      font-style: italic;
+      margin-top: 30px;
+      font-size: 25px;
+      color: var(--brown);
+    }
+
+    /* MENU */
+
+    .menu-section {
+      background: var(--deep-black);
+      color: white;
+    }
+
+    .menu-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 60px;
+    }
+
+    .menu-heading .section-label {
+      color: #b18b6e;
+    }
+
+    .menu-heading p {
+      color: #a9a29b;
+      max-width: 370px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 70px;
+    }
+
+    .menu-item {
+      padding: 27px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.13);
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .menu-item h3 {
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .menu-item p {
+      color: #99918a;
+      font-size: 13px;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    .price {
+      color: #c19b7a;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    /* FEATURE */
+
+    .feature {
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 620px;
+    }
+
+    .feature-image {
+      background:
+        url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=90")
+        center/cover;
+    }
+
+    .feature-content {
+      background: #e6dbcd;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10%;
+    }
+
+    .feature-content p {
+      color: #62584f;
+      line-height: 1.8;
+      margin-top: 25px;
+      max-width: 500px;
+    }
+
+    .small-btn {
+      margin-top: 30px;
+      width: fit-content;
+      background: var(--black);
+      color: white;
+      border: none;
+      padding: 14px 23px;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+
+    .small-btn:hover {
+      background: var(--brown);
+      transform: translateY(-2px);
+    }
+
+    /* GALLERY */
+
+    .gallery {
+      background: var(--warm-white);
+    }
+
+    .gallery-heading {
+      text-align: center;
+      margin-bottom: 55px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 1fr;
+      grid-template-rows: 260px 260px;
+      gap: 14px;
+    }
+
+    .gallery-grid img {
+      height: 100%;
+      transition: 0.6s;
+    }
+
+    .gallery-grid div {
+      overflow: hidden;
+    }
+
+    .gallery-grid div:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-grid .tall {
+      grid-row: span 2;
+    }
+
+    /* QUOTE */
+
+    .quote {
+      background: #241d18;
+      color: white;
+      text-align: center;
+    }
+
+    .quote-inner {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .quote blockquote {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: 1.25;
+      font-style: italic;
+    }
+
+    .quote small {
+      display: block;
+      margin-top: 25px;
+      color: #b7a99d;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    /* CONTACT */
+
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      background: var(--cream);
+    }
+
+    .contact-info {
+      margin-top: 35px;
+    }
+
+    .contact-row {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .contact-row span {
+      display: block;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--brown);
+      margin-bottom: 8px;
+    }
+
+    .contact-row p {
+      color: #4e4741;
+    }
+
+    .reservation {
+      background: var(--black);
+      color: white;
+      padding: 50px;
+    }
+
+    .reservation h3 {
+      font-family: "Playfair Display", serif;
+      font-size: 36px;
+      font-weight: 500;
+    }
+
+    .reservation p {
+      color: #aaa39c;
+      line-height: 1.7;
+      margin: 15px 0 30px;
+    }
+
+    .reservation input,
+    .reservation select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #25221f;
+      border: 1px solid #3b3733;
+      color: white;
+      outline: none;
+    }
+
+    .reservation input:focus,
+    .reservation select:focus {
+      border-color: #b18b6e;
+    }
+
+    .reservation button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      background: #c09a79;
+      color: #171512;
+      margin-top: 5px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .reservation button:hover {
+      background: #d4ae8d;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: var(--deep-black);
+      color: white;
+      padding: 55px 7% 25px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      padding-bottom: 45px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-brand h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 30px;
+      font-weight: 500;
+    }
+
+    .footer-brand p {
+      color: #8f8881;
+      margin-top: 10px;
+      max-width: 330px;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 30px;
+      align-items: start;
+      font-size: 13px;
+      color: #bdb5ad;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .copyright {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 22px;
+      color: #716b65;
+      font-size: 11px;
+    }
+
+    /* SCROLL REVEAL */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 850px) {
+
+      nav {
+        padding: 18px 6%;
+      }
+
+      .nav-links,
+      .nav-button {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 70px;
+        left: 5%;
+        right: 5%;
+        background: rgba(20,18,16,0.97);
+        padding: 25px;
+        flex-direction: column;
+        gap: 20px;
+        border-radius: 8px;
+      }
+
+      .hero {
+        padding: 0 6%;
+      }
+
+      .hero h1 {
+        font-size: clamp(53px, 15vw, 80px);
+      }
+
+      .hero-note {
+        display: none;
+      }
+
+      section {
+        padding: 80px 6%;
+      }
+
+      .about,
+      .contact,
+      .feature {
+        grid-template-columns: 1fr;
+      }
+
+      .about {
+        gap: 45px;
+      }
+
+      .about-image {
+        height: 450px;
+      }
+
+      .feature {
+        min-height: auto;
+      }
+
+      .feature-image {
+        min-height: 420px;
+      }
+
+      .feature-content {
+        padding: 70px 6%;
+      }
+
+      .menu-heading {
+        display: block;
+      }
+
+      .menu-heading p {
+        margin-top: 20px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 250px 250px 250px;
+      }
+
+      .gallery-grid .tall {
+        grid-row: span 1;
+      }
+
+      .gallery-grid div:first-child {
+        grid-column: span 2;
+      }
+
+      .reservation {
+        padding: 35px 25px;
+      }
+
+      .footer-top,
+      .copyright {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions {
+        flex-direction: column;
+        width: 180px;
+      }
+
+      .gallery-grid {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .gallery-grid div {
+        height: 280px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav id="navbar">
+
+    <a href="#home" class="logo">
+      Oak <span>&</span> Ember
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Visit Us</a></li>
+    </ul>
+
+    <a href="#contact" class="nav-button">Book a Table</a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+      ☰
+    </button>
+
+  </nav>
+
+
+  <!-- HERO -->
+
+  <header class="hero" id="home">
+
+    <div class="hero-content">
+
+      <div class="eyebrow">
+        Coffee · Food · Good Company
+      </div>
+
+      <h1>
+        Take your time.<br>
+        <em>Stay for coffee.</em>
+      </h1>
+
+      <p>
+        A little neighbourhood café for slow mornings,
+        long conversations and coffee worth coming back for.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#menu" class="btn primary">Explore the Menu</a>
+        <a href="#contact" class="btn secondary">Find Our Café</a>
+      </div>
+
+    </div>
+
+    <div class="hero-note">
+      OPEN DAILY · 8:00 AM — 10:00 PM
+    </div>
+
+  </header>
+
+
+  <!-- INTRO -->
+
+  <section class="intro reveal">
+
+    <div class="intro-inner">
+
+      <div class="section-label">
+        Welcome to Oak & Ember
+      </div>
+
+      <p>
+        “We believe coffee doesn't have to be rushed.
+        Some of the best conversations happen over the
+        second cup.”
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+
+  <section class="about" id="about">
+
+    <div class="about-image reveal">
+
+      <img
+        src="https://images.unsplash.com/photo-1442975631115-c4f7b05b8a2c?auto=format&fit=crop&w=1200&q=90"
+        alt="Coffee shop interior"
+      >
+
+    </div>
+
+    <div class="about-text reveal">
+
+      <div class="section-label">
+        Our Story
+      </div>
+
+      <h2 class="section-title">
+        Made with care.<br>
+        Served with warmth.
+      </h2>
+
+      <p>
+        Oak & Ember started with a simple idea:
+        create a place where good coffee and good people
+        could meet without feeling rushed.
+
+        Our beans are roasted in small batches, our food
+        is made fresh every morning, and our door is always
+        open for one more conversation.
+      </p>
+
+      <div class="signature">
+        — The Oak & Ember Team
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- MENU -->
+
+  <section class="menu-section" id="menu">
+
+    <div class="menu-heading reveal">
+
+      <div>
+        <div class="section-label">
+          Something for everyone
+        </div>
+
+        <h2 class="section-title">
+          The Menu
+        </h2>
+      </div>
+
+      <p>
+        Simple ingredients, familiar favourites and a few
+        things you didn't know you were craving.
+      </p>
+
+    </div>
+
+
+    <div class="menu-grid reveal">
+
+      <div class="menu-item">
+        <div>
+          <h3>House Cappuccino</h3>
+          <p>Double espresso, silky milk, a little cocoa.</p>
+        </div>
+        <div class="price">₹180</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Classic Americano</h3>
+          <p>Bold espresso with hot water.</p>
+        </div>
+        <div class="price">₹140</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Brown Sugar Latte</h3>
+          <p>Espresso, steamed milk and house brown sugar.</p>
+        </div>
+        <div class="price">₹210</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Cold Brew</h3>
+          <p>Slow-steeped for eighteen hours.</p>
+        </div>
+        <div class="price">₹190</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Butter Croissant</h3>
+          <p>Flaky, golden and baked fresh every morning.</p>
+        </div>
+        <div class="price">₹150</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Avocado Toast</h3>
+          <p>Sourdough, avocado, chilli and lemon.</p>
+        </div>
+        <div class="price">₹280</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Ember Chicken Sandwich</h3>
+          <p>Grilled chicken, cheddar, greens and house sauce.</p>
+        </div>
+        <div class="price">₹340</div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <h3>Warm Chocolate Cake</h3>
+          <p>Dark chocolate cake with vanilla cream.</p>
+        </div>
+        <div class="price">₹260</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FEATURE -->
+
+  <section class="feature">
+
+    <div class="feature-image"></div>
+
+    <div class="feature-content reveal">
+
+      <div class="section-label">
+        Coffee worth waking up for
+      </div>
+
+      <h2 class="section-title">
+        Roasted slowly.<br>
+        Brewed beautifully.
+      </h2>
+
+      <p>
+        We work with independent roasters who care about
+        where their coffee comes from. Every bean is chosen
+        for character, balance and that moment when you take
+        the first sip and quietly think, “Yep. That's good.”
+      </p>
+
+      <a href="#contact" class="small-btn">
+        Come Say Hello
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- GALLERY -->
+
+  <section class="gallery" id="gallery">
+
+    <div class="gallery-heading reveal">
+
+      <div class="section-label">
+        A glimpse inside
+      </div>
+
+      <h2 class="section-title">
+        Come as you are.
+      </h2>
+
+    </div>
+
+
+    <div class="gallery-grid reveal">
+
+      <div class="tall">
+        <img
+          src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=90"
+          alt="Cafe interior"
+        >
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1511081692775-05d0f180a065?auto=format&fit=crop&w=900&q=90"
+          alt="Coffee"
+        >
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=900&q=90"
+          alt="Cafe table"
+        >
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=90"
+          alt="Coffee cup"
+        >
+      </div>
+
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=900&q=90"
+          alt="Cafe food"
+        >
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- QUOTE -->
+
+  <section class="quote">
+
+    <div class="quote-inner reveal">
+
+      <blockquote>
+        “Good coffee is a reason to pause. Great coffee is a reason to stay.”
+      </blockquote>
+
+      <small>Oak & Ember Philosophy</small>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACT & RESERVATION -->
+
+  <section class="contact" id="contact">
+
+    <div class="contact-left reveal">
+
+      <div class="section-label">
+        Find Your Corner
+      </div>
+
+      <h2 class="section-title">
+        Drop by & say hi.
+      </h2>
+
+      <div class="contact-info">
+
+        <div class="contact-row">
+          <span>Address</span>
+          <p>44 Brookside Lane, Green Park, New Delhi</p>
+        </div>
+
+        <div class="contact-row">
+          <span>Hours</span>
+          <p>Monday – Sunday: 8:00 AM – 10:00 PM</p>
+        </div>
+
+        <div class="contact-row">
+          <span>Contact</span>
+          <p>hello@oakandembercafe.com · +91 (0) 98765 43210</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="reservation reveal">
+
+      <h3>Reserve a Table</h3>
+      <p>Planning a quiet work session, book club, or catch-up with friends? Save a spot ahead of time.</p>
+
+      <form onsubmit="event.preventDefault(); alert('Thank you! Your table request has been received.');">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Email Address" required>
+        <input type="tel" placeholder="Phone Number" required>
+        
+        <select required>
+          <option value="" disabled selected>Number of Guests</option>
+          <option value="1">1 Person</option>
+          <option value="2">2 People</option>
+          <option value="3-4">3 - 4 People</option>
+          <option value="5+">5+ People</option>
+        </select>
+
+        <input type="datetime-local" required>
+
+        <button type="submit">Book Table</button>
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <h2>Oak & Ember</h2>
+        <p>A little neighbourhood café made for slow mornings, warm cups, and friendly conversations.</p>
+      </div>
+
+      <ul class="footer-links" style="list-style: none;">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+    </div>
+
+    <div class="copyright">
+      <div>&copy; 2026 Oak & Ember Café. All rights reserved.</div>
+      <div>Designed with care.</div>
+    </div>
+
+  </footer>
+
+
+  <!-- JAVASCRIPT -->
+
+  <script>
+    // Navbar scroll background change
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // Scroll reveal animation observer
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    reveals.forEach(el => revealObserver.observe(el));
+  </script>
+
+</body>
+</html>
